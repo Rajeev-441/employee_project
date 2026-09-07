@@ -1,0 +1,1014 @@
+# 📊 Employee Productivity Analytics & Workforce Intelligence Web App
+
+## 📌 Project Overview
+
+The **Employee Productivity Analytics & Workforce Intelligence Web App** is an interactive data analytics application developed using **Python, Pandas, Machine Learning, Plotly, and Streamlit**.
+
+The main objective of this project is to transform employee-related data into meaningful insights that can help organizations understand **employee productivity, engagement, performance, training, competency, and work-life balance**.
+
+The application combines **data analysis, visualization, machine learning, anomaly detection, bias analysis, and scenario simulation** into a single interactive web application.
+
+Instead of manually analyzing large amounts of employee data, HR professionals and managers can use the application to quickly identify workforce patterns, compare departments, identify employees with low productivity, analyze employee performance, and explore possible productivity improvements.
+
+---
+
+## 🎯 Problem Statement
+
+Organizations collect large amounts of employee data, but raw data alone does not provide useful information for decision-making.
+
+Managers may need answers to questions such as:
+
+* What is the average employee productivity?
+* Which departments have higher or lower productivity?
+* Is employee training associated with productivity?
+* Which employees have high engagement?
+* Which employees have unusually low productivity?
+* How are work-life balance scores distributed?
+* How do employee training, engagement, and competency relate to performance?
+* What could happen to productivity if training is increased or meetings are reduced?
+
+This project addresses these questions by converting employee data into **visual insights, analytical results, machine learning predictions, and interactive simulations**.
+
+---
+
+# 🚀 Key Features
+
+### 1. Productivity & Engagement KPIs
+
+Displays important workforce metrics such as:
+
+* Average Productivity Score
+* Average Engagement Score
+
+These KPIs provide a quick overview of the overall workforce.
+
+### 2. Department Productivity Analysis
+
+Compares average productivity across different departments using an interactive bar chart.
+
+### 3. Training vs Productivity Analysis
+
+Uses a bubble scatter plot to analyze the relationship between:
+
+* Training Hours
+* Productivity Score
+* Competency Score
+* Engagement Score
+
+### 4. Employee Engagement Leaderboard
+
+Displays the top 5 employees based on engagement score along with their productivity and department.
+
+### 5. Work-Life Balance Analysis
+
+Uses a histogram to understand the distribution of employee work-life balance scores across departments.
+
+### 6. Productivity Anomaly Detection
+
+Identifies employees whose productivity score falls below a predefined threshold.
+
+In the current implementation:
+
+```python
+ProductivityScore < 65
+```
+
+is considered an anomaly.
+
+### 7. Machine Learning Performance Classification
+
+A Random Forest classification model is trained using:
+
+* Training Hours
+* Engagement Score
+* Competency Score
+
+to classify employees into different performance categories.
+
+### 8. Bias Analysis
+
+Compares model-generated scores across departments and performance categories to identify differences between groups.
+
+### 9. Scenario Simulation
+
+Allows users to interactively change:
+
+* Meeting reduction percentage
+* Training increase percentage
+
+and observe the resulting simulated productivity.
+
+### 10. Interactive Web Application
+
+All analytics and machine learning components are integrated into a single **Streamlit web application**.
+
+---
+
+# 🛠️ Technologies Used
+
+| Technology        | Purpose                                                                      |
+| ----------------- | ---------------------------------------------------------------------------- |
+| **Python**        | Main programming language                                                    |
+| **Pandas**        | Data loading, cleaning, transformation and analysis                          |
+| **Scikit-learn**  | Machine learning model development                                           |
+| **Random Forest** | Employee performance classification                                          |
+| **Joblib**        | Saving and loading the trained ML model                                      |
+| **Plotly**        | Interactive data visualization                                               |
+| **Streamlit**     | Building the interactive web application                                     |
+| **Excel**         | Data preparation and initial cleaning                                        |
+| **MySQL/SQL**     | Database storage and SQL-based analysis, if included in the project workflow |
+
+---
+
+# 📂 Project Structure
+
+```text
+Employee-Productivity-Analytics/
+│
+├── app.py
+│
+├── charts.py
+│
+├── anomaly.py
+│
+├── data/
+│   └── cleaned_data.csv
+│
+├── models/
+│   └── attrition_model.pkl
+│
+└── scripts/
+    ├── bias_detection.py
+    └── simulation.py
+```
+
+---
+
+# 🔄 Project Workflow
+
+```text
+Raw Employee Data
+        ↓
+Data Cleaning & Preparation
+        ↓
+Cleaned Dataset
+        ↓
+Python / Pandas
+        ↓
+Data Analysis
+        ↓
+Visualization + ML + Analytical Functions
+        ↓
+Streamlit Web Application
+        ↓
+Workforce Insights
+        ↓
+HR / Management Decision Support
+```
+
+---
+
+# 🧩 Code Explanation
+
+## 1. `app.py` — Main Application
+
+`app.py` is the main file of the project.
+
+It connects all the different components and displays them through Streamlit.
+
+### Importing libraries
+
+```python
+import streamlit as st
+import pandas as pd
+import joblib
+```
+
+### Purpose
+
+* `streamlit` → creates the web application interface
+* `pandas` → handles employee data
+* `joblib` → loads the trained machine learning model
+
+---
+
+### Importing project modules
+
+```python
+from charts import hybrid_work_chart, gamification_chart, wellbeing_chart, leaderboard_chart
+from anomaly import detect_anomalies
+from scripts.bias_detection import bias_detection
+from scripts.simulation import simulate_intervention
+```
+
+Instead of putting all code in one file, different functionalities are separated into modules.
+
+For example:
+
+```text
+charts.py
+     ↓
+Visualization
+
+anomaly.py
+     ↓
+Anomaly Detection
+
+bias_detection.py
+     ↓
+Bias Analysis
+
+simulation.py
+     ↓
+Scenario Simulation
+```
+
+This makes the project more organized and easier to maintain.
+
+---
+
+### Loading the dataset
+
+```python
+df = pd.read_csv("data/cleaned_data.csv")
+```
+
+This loads the cleaned employee dataset into a Pandas DataFrame called `df`.
+
+The DataFrame is then passed to the different functions for analysis.
+
+---
+
+### Creating the application title
+
+```python
+st.title("📊 Workforce Analytics Dashboard")
+```
+
+This displays the main title of the Streamlit application.
+
+---
+
+# 2. KPI Calculation
+
+```python
+st.metric(
+    "Average Productivity",
+    round(df['ProductivityScore'].mean(),2)
+)
+
+st.metric(
+    "Average Engagement",
+    round(df['Engagement_Score'].mean(),2)
+)
+```
+
+### What does this code do?
+
+First:
+
+```python
+df['ProductivityScore'].mean()
+```
+
+calculates the average productivity score.
+
+Similarly:
+
+```python
+df['Engagement_Score'].mean()
+```
+
+calculates the average engagement score.
+
+`round(...,2)` limits the result to two decimal places.
+
+`st.metric()` displays the result as a KPI on the dashboard.
+
+### Business purpose
+
+These metrics allow managers to quickly understand the overall productivity and engagement level of employees.
+
+---
+
+# 3. Calling the Visualization Functions
+
+```python
+hybrid_work_chart(df)
+gamification_chart(df)
+leaderboard_chart(df)
+wellbeing_chart(df)
+```
+
+These functions are defined separately in `charts.py`.
+
+The cleaned DataFrame is passed to each function.
+
+This allows the application to display different workforce analyses.
+
+---
+
+# 4. `charts.py` — Visualization Module
+
+The `charts.py` file contains functions responsible for creating charts and tables.
+
+---
+
+## A. Department Productivity Chart
+
+```python
+def hybrid_work_chart(df):
+
+    department_chart = df.groupby(
+        "Department"
+    )["ProductivityScore"].mean().reset_index()
+```
+
+### What happens here?
+
+Employees are grouped according to their department.
+
+Then the average productivity score is calculated for each department.
+
+For example:
+
+```text
+IT       → 82
+HR       → 75
+Finance  → 79
+Sales    → 70
+```
+
+Then:
+
+```python
+fig = px.bar(
+    department_chart,
+    x="Department",
+    y="ProductivityScore",
+    color="Department"
+)
+```
+
+creates a bar chart.
+
+### Purpose
+
+It helps compare productivity between departments.
+
+---
+
+# 5. Training vs Productivity Chart
+
+```python
+def gamification_chart(df):
+```
+
+This function creates a scatter plot.
+
+```python
+fig = px.scatter(
+    df,
+    x="Training_Hours",
+    y="ProductivityScore",
+    size="Competency_Score",
+    color="Engagement_Score",
+    hover_data=["Department"]
+)
+```
+
+### Variables
+
+**X-axis:**
+
+```text
+Training Hours
+```
+
+**Y-axis:**
+
+```text
+Productivity Score
+```
+
+**Bubble size:**
+
+```text
+Competency Score
+```
+
+**Bubble color:**
+
+```text
+Engagement Score
+```
+
+### Purpose
+
+The chart allows us to visually investigate patterns between employee training and productivity while considering competency and engagement.
+
+It is important to remember that this visualization shows **relationships or patterns**, not proof of causation.
+
+---
+
+# 6. Employee Leaderboard
+
+```python
+leaderboard = df.sort_values(
+    "Engagement_Score",
+    ascending=False
+).head(5)
+```
+
+### What does this do?
+
+1. Sorts employees according to engagement score.
+2. Sorts from highest to lowest.
+3. Selects the first five employees.
+
+Then:
+
+```python
+st.table(
+    leaderboard[
+        [
+            "Employee_ID",
+            "Department",
+            "Engagement_Score",
+            "ProductivityScore"
+        ]
+    ]
+)
+```
+
+displays the selected employees.
+
+### Purpose
+
+This provides a quick view of highly engaged employees and their productivity.
+
+---
+
+# 7. Work-Life Balance Analysis
+
+```python
+fig = px.histogram(
+    df,
+    x="WorkLifeBalance",
+    nbins=20,
+    color="Department"
+)
+```
+
+This creates a histogram of work-life balance scores.
+
+### Purpose
+
+It helps understand how employee work-life balance scores are distributed and allows comparison across departments.
+
+---
+
+# 8. `anomaly.py` — Productivity Anomaly Detection
+
+The anomaly detection functionality is contained in:
+
+```text
+anomaly.py
+```
+
+The function is:
+
+```python
+def detect_anomalies(df):
+```
+
+The application creates a scatter plot using:
+
+```python
+px.scatter(
+    df,
+    x="Training_Hours",
+    y="ProductivityScore"
+)
+```
+
+It then identifies low-productivity employees using:
+
+```python
+anomalies = df[
+    df["ProductivityScore"] < 65
+]
+```
+
+### Current approach
+
+In this project, an employee is considered a productivity anomaly when:
+
+```text
+Productivity Score < 65
+```
+
+### Purpose
+
+The objective is to identify employees whose productivity is significantly below the defined business threshold so that they can be further investigated.
+
+### Important technical clarification
+
+This is **threshold-based anomaly detection**, not an advanced machine-learning anomaly detection algorithm such as Isolation Forest.
+
+---
+
+# 9. Machine Learning Model Training
+
+The model training code loads the cleaned dataset:
+
+```python
+df = pd.read_csv(DATA_PATH)
+```
+
+Then three features are selected:
+
+```python
+X = df[
+    [
+        "Training_Hours",
+        "Engagement_Score",
+        "Competency_Score"
+    ]
+]
+```
+
+These are the input variables used by the machine learning model.
+
+---
+
+## Target Variable
+
+Currently:
+
+```python
+y = df["Performance_Category"]
+```
+
+The target is:
+
+```text
+Performance Category
+```
+
+with:
+
+```text
+0 = Low
+1 = Moderate
+2 = High
+```
+
+Therefore, the current model is a **performance classification model**.
+
+---
+
+# 10. Train-Test Split
+
+```python
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.2
+)
+```
+
+The dataset is divided into:
+
+```text
+80% → Training data
+20% → Testing data
+```
+
+The training data is used to teach the model.
+
+The testing data is reserved for evaluating the model on unseen data.
+
+---
+
+# 11. Random Forest Model
+
+```python
+model = RandomForestClassifier()
+```
+
+A Random Forest classifier is created.
+
+Then:
+
+```python
+model.fit(X_train, y_train)
+```
+
+trains the model using the training data.
+
+### Simple explanation
+
+Random Forest combines multiple decision trees to make a classification decision.
+
+In this project, it learns patterns between:
+
+```text
+Training Hours
++
+Engagement Score
++
+Competency Score
+        ↓
+Performance Category
+```
+
+---
+
+# 12. Saving the Model
+
+```python
+joblib.dump(model, MODEL_PATH)
+```
+
+The trained model is saved as:
+
+```text
+attrition_model.pkl
+```
+
+This allows the trained model to be reused later without training it again every time the application starts.
+
+---
+
+# ⚠️ Important: Current Model Naming
+
+Although the saved file is named:
+
+```text
+attrition_model.pkl
+```
+
+the current training code actually predicts:
+
+```text
+Performance_Category
+```
+
+not employee attrition.
+
+Therefore, technically the current implementation should either:
+
+### Option 1
+
+Rename it to:
+
+```text
+performance_model.pkl
+```
+
+and use terminology such as:
+
+```text
+Performance Prediction
+```
+
+### OR
+
+### Option 2 — Recommended
+
+If your dataset contains an actual `Attrition` column, train the model using:
+
+```python
+y = df["Attrition"]
+```
+
+Then the model can genuinely be used for attrition prediction.
+
+This distinction is important when presenting the project to recruiters.
+
+---
+
+# 13. Loading the Machine Learning Model
+
+In `app.py`:
+
+```python
+model = joblib.load(
+    "models/attrition_model.pkl"
+)
+```
+
+The previously trained model is loaded into the application.
+
+This means the model does not need to be trained every time a user opens the dashboard.
+
+---
+
+# 14. Generating Predictions
+
+Currently the application uses:
+
+```python
+model.predict_proba(
+    df[
+        [
+            "Training_Hours",
+            "Engagement_Score",
+            "Competency_Score"
+        ]
+    ]
+)
+```
+
+`predict_proba()` returns the probability assigned to each class.
+
+However, because the current model was trained on `Performance_Category`, these probabilities represent **performance-class probabilities**, not actual attrition probabilities.
+
+Therefore, the current label:
+
+```python
+Attrition_Risk
+```
+
+should be changed unless a genuine attrition model is trained.
+
+---
+
+# 15. `bias_detection.py` — Group-Level Bias Analysis
+
+The function:
+
+```python
+def bias_detection(df):
+```
+
+compares the model-generated scores across different groups.
+
+For example:
+
+```python
+df.groupby("Department")["Attrition_Risk"].mean()
+```
+
+calculates the average score for each department.
+
+It also performs:
+
+```python
+df.groupby("Performance_Category")["Attrition_Risk"].mean()
+```
+
+to compare the scores across performance categories.
+
+### Purpose
+
+The goal is to check whether different groups show significantly different model outcomes.
+
+### Important clarification
+
+This is currently a **group-level comparison**, not a complete statistical fairness/bias evaluation framework.
+
+---
+
+# 16. `simulation.py` — Scenario Simulation
+
+The simulation module allows users to interact with the application.
+
+```python
+meetings = st.slider(
+    "Reduce Meetings (%)",
+    0,
+    50,
+    10
+)
+```
+
+The user can select a meeting reduction percentage.
+
+Similarly:
+
+```python
+training = st.slider(
+    "Increase Training Hours (%)",
+    0,
+    50,
+    10
+)
+```
+
+allows the user to increase training hours.
+
+---
+
+## Simulated Productivity
+
+The application calculates:
+
+```python
+df["Simulated_Productivity"] = (
+    df["ProductivityScore"]
+    + (training * 0.1)
+    - (meetings * 0.05)
+)
+```
+
+The application then compares:
+
+```text
+Current Productivity
+        vs
+Simulated Productivity
+```
+
+using a line chart.
+
+### Purpose
+
+This provides a simple **what-if analysis**.
+
+For example:
+
+> "What would simulated productivity look like if training hours were increased?"
+
+or:
+
+> "What would simulated productivity look like under a different meeting scenario?"
+
+### Important clarification
+
+The simulation is based on **predefined assumptions**, not a machine-learning prediction.
+
+---
+
+# 17. Why Streamlit?
+
+Streamlit was used to convert the Python analytics code into an interactive web application.
+
+Without Streamlit:
+
+```text
+Python code
+   ↓
+Terminal / Notebook
+```
+
+With Streamlit:
+
+```text
+Python Analytics
+      ↓
+Streamlit
+      ↓
+Interactive Web Application
+```
+
+Users can view:
+
+* KPIs
+* Charts
+* Tables
+* ML results
+* Anomaly results
+* Simulation controls
+
+without directly interacting with the Python code.
+
+---
+
+# 18. Business Value
+
+The project helps HR and management move from simply viewing raw employee records to obtaining meaningful workforce insights.
+
+It can help answer:
+
+* Which departments have lower productivity?
+* What are the overall engagement levels?
+* Which employees are highly engaged?
+* Which employees have low productivity?
+* How are work-life balance scores distributed?
+* What relationship exists between training and productivity?
+* How do employee characteristics relate to performance?
+* What happens under different training and meeting scenarios?
+
+---
+
+# 📊 End-to-End Project Flow
+
+```text
+                 Employee Dataset
+                       ↓
+               Data Cleaning
+                       ↓
+               Cleaned CSV Data
+                       ↓
+                  Pandas
+                       ↓
+        ┌──────────────┼──────────────┐
+        ↓              ↓              ↓
+   Data Analysis   Visualization    ML Model
+        ↓              ↓              ↓
+     KPIs/Stats     Plotly Charts   Random Forest
+        ↓              ↓              ↓
+        └──────────────┼──────────────┘
+                       ↓
+                Streamlit App
+                       ↓
+        ┌──────────────┼──────────────┐
+        ↓              ↓              ↓
+   Anomalies       Group Analysis   Simulation
+        ↓              ↓              ↓
+        └──────────────┼──────────────┘
+                       ↓
+              Workforce Insights
+```
+
+---
+
+# 🎯 Project Outcome
+
+The final application provides an interactive platform for analyzing employee productivity and workforce-related factors.
+
+It combines:
+
+**Data Analytics + Visualization + Machine Learning + Interactive Web Development**
+
+to transform employee data into understandable insights that can support HR and management decision-making.
+
+---
+
+# 💡 Key Skills Demonstrated
+
+### Data Analytics
+
+* Data cleaning
+* Data transformation
+* Exploratory analysis
+* Group-by analysis
+* KPI calculation
+* Workforce analytics
+
+### Python
+
+* Pandas
+* Functions
+* Modular programming
+* File handling
+* Machine learning integration
+
+### Machine Learning
+
+* Classification
+* Train-test split
+* Random Forest
+* Model persistence using Joblib
+
+### Visualization
+
+* Bar charts
+* Scatter plots
+* Histograms
+* Interactive tables
+* Streamlit visualizations
+
+### Application Development
+
+* Streamlit
+* Modular Python files
+* Interactive widgets
+* Integration of analytics and ML components
+
+### Business Analytics
+
+* Employee productivity
+* Employee engagement
+* Performance analysis
+* Work-life balance
+* Workforce risk analysis
+* What-if scenario analysis
+
+---
+
+# 🔮 Future Improvements
+
+The project can be further improved by:
+
+* Connecting Streamlit directly to **MySQL**
+* Adding proper **ML model evaluation metrics**
+* Implementing a genuine **employee attrition target**
+* Adding filters for department, employee and performance category
+* Adding more HR KPIs
+* Implementing advanced anomaly detection algorithms
+* Improving fairness analysis using formal fairness metrics
+* Adding interactive Power BI reporting if required
+* Deploying the application online
+
+---
+
+# 👨‍💻 Conclusion
+
+The Employee Productivity Analytics & Workforce Intelligence Web App demonstrates how employee data can be transformed into useful business insights using modern data analytics and application development techniques.
+
+The project combines **Python, Pandas, SQL/MySQL, Excel, Machine Learning, Plotly and Streamlit** to create an end-to-end analytics application.
+
+The primary focus is on **workforce analytics and data-driven decision-making**, while the machine learning and Streamlit components demonstrate additional technical and development skills.
